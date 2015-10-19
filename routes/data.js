@@ -53,8 +53,11 @@ router.get('/', function(req, res, next) {
 
   router.post('/sentiment/', function(req, res, next) {
     var param = req.body.text;
-    var regexp = new RegExp('#([^\\s]*)','g');
-    var text = param.replace(regexp, ' ');
+    // console.log("Before " + param);
+    var text = encodeURIComponent(param);
+    // console.log("After " + text);
+    // var regexp = new RegExp('#([^\\s]*)','g');
+    // var text = param.replace(regexp, ' ');
     // var text = param.replace(/^#/, '');
     // console.log(text);
     // console.log(text);

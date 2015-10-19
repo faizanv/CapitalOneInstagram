@@ -25,6 +25,7 @@ $(document).ready(function() {
               success: function(res) {
                 // console.log(res);
                 var sent = '';
+                console.log(res);
                 if (res.type == "positive") {
                   sent = "<span style='color:green;'>"+res.type+"</span>";
                 } else if (res.type == "negative") {
@@ -32,7 +33,7 @@ $(document).ready(function() {
                 } else {
                   sent = "<span style='color:yellow;'>"+res.type+"</span>";
                 }
-                $("#bar" + index).after("<h2><strong>Sentiment: </strong>"+sent+  "</h2>")
+                $("#bar" + index).after("<h2><strong>Sentiment: </strong>"+sent+  " (Score: "+res.score+")</h2>")
               }
             });
           }(cap);
