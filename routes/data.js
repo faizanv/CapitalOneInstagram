@@ -53,6 +53,7 @@ router.get('/', function(req, res, next) {
 
   router.post('/sentiment/', function(req, res, next) {
     var param = req.body.text;
+    // console.log(param);
     // console.log("Before " + param);
     var text = encodeURIComponent(param);
     // console.log("After " + text);
@@ -68,9 +69,14 @@ router.get('/', function(req, res, next) {
       // console.log(result);
       // res.send(JSON.stringify(result));
       if (err) {
+        console.log(err);
         res.send(err);
       } else {
-        res.send(JSON.parse(result.text).docSentiment);
+        if (JSON.parse(result.text).status == "OK") {
+          res.send(JSON.parse(result.text).docSentiment);
+        } else {
+          res.send(JSON.parse(result.text));
+        }
       }
     });
     // res.send("good job");

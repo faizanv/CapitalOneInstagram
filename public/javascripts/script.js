@@ -24,23 +24,28 @@ $(document).ready(function() {
               dataType: "json",
               contentType: "application/json; charset=UTF-8",
               success: function(res) {
-                console.log(res);
-                var sent = '';
+                // console.log(res);
                 // console.log(index + "" + res);
-                if (res.type == "positive") {
-                  sent = "<span style='color:green;'>"+res.type+"</span>";
-                } else if (res.type == "negative") {
-                  sent = "<span style='color:red;'>"+res.type+"</span>";
+                if (res.statusInfo) {
+                  //score = res.statusInfo;
+                  $("#bar" + index).after("<h2 style='color:orange;'><strong>Sentiment: </strong>"+res.statusInfo+"</h2>");
                 } else {
-                  sent = "<span style='color:yellow;'>"+res.type+"</span>";
+                  var sent = '';
+                  if (res.type == "positive") {
+                    sent = "<span style='color:green;'>"+res.type+"</span>";
+                  } else if (res.type == "negative") {
+                    sent = "<span style='color:red;'>"+res.type+"</span>";
+                  } else {
+                    sent = "<span style='color:yellow;'>"+res.type+"</span>";
+                  }
+                  var score = '';
+                  if (res.score) {
+                    score = "(Score: "+res.score+")";
+                  } else {
+                    score = "(Score: 0)";
+                  }
+                  $("#bar" + index).after("<h2><strong>Sentiment: </strong>"+sent+  " "+score+"</h2>");
                 }
-                var score = '';
-                if (res.score) {
-                  score = "(Score: "+res.score+")";
-                } else {
-                  score = "(Score: 0)";
-                }
-                $("#bar" + index).after("<h2><strong>Sentiment: </strong>"+sent+  " "+score+"</h2>")
               },
               error: function(err) {
                 console.log(err);
