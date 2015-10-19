@@ -12,9 +12,10 @@ $(document).ready(function() {
         var followers = '';
         var follows = '';
 
-        if (data[i].caption) {
+        if (data[index].caption) {
           caption = data[index].caption.text;
           var cap = {"text":caption};
+          // console.log(index);
           var helper2 = function (caption) {
             $.ajax({
               url: "data/sentiment",
@@ -23,9 +24,9 @@ $(document).ready(function() {
               dataType: "json",
               contentType: "application/json; charset=UTF-8",
               success: function(res) {
-                // console.log(res);
-                var sent = '';
                 console.log(res);
+                var sent = '';
+                // console.log(index + "" + res);
                 if (res.type == "positive") {
                   sent = "<span style='color:green;'>"+res.type+"</span>";
                 } else if (res.type == "negative") {
@@ -33,7 +34,16 @@ $(document).ready(function() {
                 } else {
                   sent = "<span style='color:yellow;'>"+res.type+"</span>";
                 }
-                $("#bar" + index).after("<h2><strong>Sentiment: </strong>"+sent+  " (Score: "+res.score+")</h2>")
+                var score = '';
+                if (res.score) {
+                  score = "(Score: "+res.score+")";
+                } else {
+                  score = "(Score: 0)";
+                }
+                $("#bar" + index).after("<h2><strong>Sentiment: </strong>"+sent+  " "+score+"</h2>")
+              },
+              error: function(err) {
+                console.log(err);
               }
             });
           }(cap);

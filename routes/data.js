@@ -67,7 +67,11 @@ router.get('/', function(req, res, next) {
     .end(function(err, result) {
       // console.log(result);
       // res.send(JSON.stringify(result));
-      res.send(JSON.parse(result.text).docSentiment);
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(JSON.parse(result.text).docSentiment);
+      }
     });
     // res.send("good job");
   });
