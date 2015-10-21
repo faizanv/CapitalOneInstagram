@@ -5,6 +5,10 @@ $(document).ready(function() {
         var username = "<h2>@"+data[index].user.username+"</h2>";
         var profile_picture = "<img src='"+data[index].user.profile_picture+"'>";
         var mainImage = data[index].images.low_resolution.url;
+        // console.log(data[index].created_time);
+        //var date = new Date(0).setUTCSeconds(data[index].created_time);
+        var date = new Date(0); // The 0 there is the key, which sets the date to the epoch
+        date.setUTCSeconds(data[index].created_time);
         var caption = '';
         var likes = '';
         var fullName = '';
@@ -57,7 +61,7 @@ $(document).ready(function() {
           likes = data[index].likes.count;
         }
         var id = data[index].user.id;
-        $("#twenty").append("<div class='jumbotron' id='foo"+index+"'><div class='thumbnail' id='bar"+index+"'>"+username+profile_picture+"</div><img src='"+mainImage+"'><h4>"+caption+"</h4><h3>"+likes+" - Likes</h3></div>");
+        $("#twenty").append("<div class='jumbotron' id='foo"+index+"'><div class='thumbnail' id='bar"+index+"'>"+username+profile_picture+"</div><img src='"+mainImage+"'><h4>"+date.toLocaleString()+"</h4><h4>"+caption+"</h4><h3>"+likes+" - Likes</h3></div>");
 
         $.get("data/userInfo/" + id, function(res) {
           fullName = res.full_name;

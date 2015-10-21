@@ -7,6 +7,11 @@
   </head>
   <body>
     <!-- <h1>Part 1: Recent 20</h1> -->
+    <div class='jumbotron' style="text-align:center;">
+      <h1><%= title %></h1>
+      <p>Below is the results for the first part of the challenge. I got the 20 most recent posts from Instagram where the caption included #CapitalOne. Those posts were displayed along with information about the user including how many posts they have, how many followers they have, and how many users they follow. I also plugged in the contents into AlchemyAPI to get back a sentiment analysis of the caption. Some of these requests failed because the API could not properly identify the language being used.</p>
+      <a href="/chart"><h2>Click here to see the trends in sentiment of these posts over time</h2></a>
+    </div>
     <div class="container" id="twenty">
     </div>
 

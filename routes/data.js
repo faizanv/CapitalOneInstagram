@@ -1,22 +1,57 @@
 var express = require('express');
 var router = express.Router();
 var request = require('superagent');
+var async = require('async');
 var token = "1322982215.b444b9d.0092e464ee594fa3b069c37d38870203";
 var alchemyKey = "84a11305e55465ffe6ea5c73d42600188ec23c0f";
 
-function getData(callback) {
+function getData(foo) {
   // var token = require('../config').token;
-  request.get("https://api.instagram.com/v1/tags/CapitalOne/media/recent?access_token=" + token)
-    .set('Accept', 'application/json')
-    .end(function(err, result) {
-      if (err) {
-        return err;
+  var data = [];
+  async.waterfall([
+    function(callback) {
+      request.get("https://api.instagram.com/v1/tags/CapitalOne/media/recent?access_token=" + token)
+        .end(function(err, result) {
+          if (err) {
+            callback(null, data, null);
+          } else {
+            data.push(result.body.data);
+            callback(null, data, result.body.pagination.next_url);
+          }
+        });
+    },
+    function(data, url, callback) {
+      if (url) {
+        request.get(url)
+          .end(function(err, result) {
+            data.push(result.body.data);
+            callback(null, data, result.body.pagination.next_url);
+          });
       } else {
-        // var data = result.body;
-        // res.send(data.data[0]);
-        callback(result.body);
+        callback(null, data, url);
       }
-    });
+    }
+  ], function(err, result, url) {
+    foo(result);
+  });
+
+  // request.get("https://api.instagram.com/v1/tags/CapitalOne/media/recent?access_token=" + token)
+  //   .end(function(err, result) {
+  //     if (err) {
+  //       return err;
+  //     } else {
+  //       // var data = result.body;
+  //       // res.send(data.data[0]);
+  //       var data = result.body.data;
+  //       for (i = 0; i < 3; i++) {
+  //         request.get(result.body.pagination.next_url)
+  //           .end(function(err, result) {
+  //             data.push(result.body.data);
+  //           });
+  //       }
+  //       callback(data);
+  //     }
+  //   });
 }
 
 /* GET users listing. */
@@ -31,7 +66,8 @@ router.get('/', function(req, res, next) {
     //
     // obj.getStuff();
     getData(function (stuff) {
-      var data = stuff.data;
+      //console.log(stuff.length);
+      var data = stuff[0];
       var result = [];
       var i = 0;
       while (i < 20 || i < data.length) {
@@ -51,7 +87,7 @@ router.get('/', function(req, res, next) {
     });
   });
 
-  router.post('/sentiment/', function(req, res, next) {
+  router.post('/sentiment', function(req, res, next) {
     var param = req.body.text;
     // console.log(param);
     // console.log("Before " + param);
