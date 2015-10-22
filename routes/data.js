@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var request = require('superagent');
 var async = require('async');
-var token = "1322982215.b444b9d.0092e464ee594fa3b069c37d38870203";
-var alchemyKey = "84a11305e55465ffe6ea5c73d42600188ec23c0f";
+var token = require('../config').token; //replace with your instagram token
+var alchemyKey = require('../config').alchemyKey; //replace with your Alchemy API key
 
 function getData(foo) {
   // var token = require('../config').token;
