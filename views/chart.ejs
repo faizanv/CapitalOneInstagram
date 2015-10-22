@@ -40,21 +40,26 @@
                 contentType: "application/json; charset=UTF-8",
                 success: function(res) {
                   if (res.statusInfo) {
-                    console.log(res.statusInfo);
+                    // console.log(i + " " + j + " " +res.statusInfo);
                   } else {
                     var scr = 0;
                     if (res.type != "neutral") {
                       scr = res.score;
                     }
+                    // var pushVal = {
+                    //   score: scr,
+                    //   date: result[i][j].created_time
+                    // }
+                    // data.push(pushVal);
+                    var date = result[i][j].created_time;
+                    // console.log(date);
+                    if ($.inArray(date, dates) == -1) {
+                      dates.push(date);
+                      scores.push(scr);
+                    }
+                    //console.log(pushVal);
                   }
-                  var pushVal = {
-                    score: scr,
-                    date: result[i][j].created_time
-                  }
-                  dates.push(result[i][j].created_time);
-                  scores.push(scr);
-                  //console.log(pushVal);
-                  data.push(pushVal);
+
                   if ((i == (result.length - 1)) && (j == (result[i].length - 1))) {
                     callback();
                   }
@@ -65,44 +70,54 @@
         }
       });
       var dataDone = function() {
+        // console.log(dates.length);
+        // console.log(scores.length);
+        for (i = 0; i < dates.length; i++) {
+          var scr = scores[i];
+          var d = dates[i];
+          var pushVal = {
+            score: scr,
+            date: d
+          }
+          data.push(pushVal);
+        }
         console.log(data);
-        // var vis = d3.select("#visualisation"),
-        // WIDTH = 1000,
-        // HEIGHT = 500,
-        // MARGINS = {
-        //   top: 20,
-        //   right: 20,
-        //   bottom: 20,
-        //   left: 50
-        // },
-        // xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(dates), d3.max(dates)]),
-        // yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([d3.min(scores), d3.max(scores)]),
-        // xAxis = d3.svg.axis()
-        // .scale(xScale),
-        // yAxis = d3.svg.axis()
-        // .scale(yScale)
-        // .orient("left");
-        // vis.append("svg:g")
-        // .attr("class", "x axis")
-        // .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-        // .call(xAxis);
-        // vis.append("svg:g")
-        // .attr("class", "y axis")
-        // .attr("transform", "translate(" + (MARGINS.left) + ",0)")
-        // .call(yAxis);
-        // var lineGen = d3.svg.line()
-        // .x(function(d) {
-        //   return xScale(d.date);
-        // })
-        // .y(function(d) {
-        //   return yScale(d.score);
-        // })
-        // .interpolate("basis");
-        // vis.append('svg:path')
-        // .attr('d', lineGen(data))
-        // .attr('stroke', 'green')
-        // .attr('stroke-width', 2)
-        // .attr('fill', 'none');
+        var vis = d3.select("#visualisation"),
+        WIDTH = 1000,
+        HEIGHT = 500,
+        MARGINS = {
+          top: 20,
+          right: 20,
+          bottom: 20,
+          left: 50
+        },
+        xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(dates), d3.max(dates)]),
+        yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([-1, 1]),
+        xAxis = d3.svg.axis()
+        .scale(xScale),
+        yAxis = d3.svg.axis()
+        .scale(yScale)
+        .orient("left");
+        vis.append("svg:g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+        .call(xAxis);
+        vis.append("svg:g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(" + (MARGINS.left) + ",0)")
+        .call(yAxis);
+        var lineGen = d3.svg.line()
+        .x(function(d) {
+          return xScale(d.date);
+        })
+        .y(function(d) {
+          return yScale(d.score);
+        });
+        vis.append('svg:path')
+        .attr('d', lineGen(data))
+        .attr('stroke', 'green')
+        .attr('stroke-width', 2)
+        .attr('fill', 'none');
       }
   </script>
 </body>
