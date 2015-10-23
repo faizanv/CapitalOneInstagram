@@ -18,6 +18,7 @@
     </style>
 </head>
 <body>
+  <h1>Sentiment of Instagram Posts VS Time (Epoch)</h1>
   <svg id="visualisation" width="1000" height="500"></svg>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -51,11 +52,26 @@
                     //   date: result[i][j].created_time
                     // }
                     // data.push(pushVal);
-                    var date = result[i][j].created_time;
+                    var date = parseInt(result[i][j].created_time);
                     // console.log(date);
                     if ($.inArray(date, dates) == -1) {
                       dates.push(date);
                       scores.push(scr);
+                      var pushVal = {
+                        score: scr,
+                        date: date
+                      }
+                      data.push(pushVal);
+                      data.sort(function(a, b) {
+                        if (a.date < b.date) {
+                          return -1;
+                        }
+                        if (a.date > b.date) {
+                          return 1;
+                        }
+                        // a must be equal to b
+                        return 0;
+                      });
                     }
                     //console.log(pushVal);
                   }
@@ -72,16 +88,16 @@
       var dataDone = function() {
         // console.log(dates.length);
         // console.log(scores.length);
-        for (i = 0; i < dates.length; i++) {
-          var scr = scores[i];
-          var d = dates[i];
-          var pushVal = {
-            score: scr,
-            date: d
-          }
-          data.push(pushVal);
-        }
-        console.log(data);
+        // for (i = 0; i < dates.length; i++) {
+        //   var scr = scores[i];
+        //   var d = dates[i];
+        //   var pushVal = {
+        //     score: scr,
+        //     date: d
+        //   }
+        //   data.push(pushVal);
+        // }
+        // console.log(data);
         var vis = d3.select("#visualisation"),
         WIDTH = 1000,
         HEIGHT = 500,
@@ -91,7 +107,7 @@
           bottom: 20,
           left: 50
         },
-        xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(dates), d3.max(dates)]),
+        xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([d3.min(dates) - 1000 , d3.max(dates) + 1000]),
         yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([-1, 1]),
         xAxis = d3.svg.axis()
         .scale(xScale),

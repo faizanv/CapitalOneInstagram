@@ -30,6 +30,28 @@ function getData(foo) {
       } else {
         callback(null, data, url);
       }
+    },
+    function(data, url, callback) {
+      if (url) {
+        request.get(url)
+          .end(function(err, result) {
+            data.push(result.body.data);
+            callback(null, data, result.body.pagination.next_url);
+          });
+      } else {
+        callback(null, data, url);
+      }
+    },
+    function(data, url, callback) {
+      if (url) {
+        request.get(url)
+          .end(function(err, result) {
+            data.push(result.body.data);
+            callback(null, data, result.body.pagination.next_url);
+          });
+      } else {
+        callback(null, data, url);
+      }
     }
   ], function(err, result, url) {
     foo(result);
